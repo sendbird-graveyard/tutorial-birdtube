@@ -1,4 +1,4 @@
-BirdTube - Watch YouTube Video Together for iOS
+# BirdTube - Watch YouTube Video Together for iOS
 
 BirdTube is full featured [YouTube](https://www.youtube.com/) + chat app built on [SendBird](https://sendbird.com/). Much like the popular app [Twitch.tv](http://www.twitch.tv/), you can chat with the fellow audience in real-time while watching videos. Although the video is not live-stream (which you can easily replace with your own live-streaming source) BirdTube is fully open source and ready for you to tinker with and explore.
 
