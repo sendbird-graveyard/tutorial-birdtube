@@ -400,3 +400,6 @@ Then set a Callback block to handle the event after connecting to SendBird serve
 * ```messageReceivedBlock:^(SendBirdMessage  message) {}```
  
  This will be called when a message has been received. The client will display the message on the chat UI.
+
+You can use SendBird to process not only the on-going real-time messages, but also to retrieve previous messages as well. After setting the callback block, you can use [[[SendBird queryMessageListInChannel:[self.video channelUrl]] prevWithMessageTs:LLONG_MAX andLimit:50 resultBlock:^(NSMutableArray *queryResult) {} endBlock:^(NSError *error) {}];](http://docs.sendbird.com/ref/ios/en/Classes/SendBirdMessageListQuery.html#//api/name/prevWithMessageTs:andLimit:resultBlock:endBlock:) to get those messages. After displaying the previous messages, you can call [[SendBird connect]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/connect) or [[SendBird connectWithMessageTs:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/connectWithMessageTs:) to start receiving real-time chat messages.
+
