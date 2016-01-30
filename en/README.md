@@ -1,1 +1,5 @@
 BirdTube - Watch YouTube Video Together for iOS
+
+BirdTube is full featured [YouTube](https://www.youtube.com/) + chat app built on SendBird. Much like the popular app Twitch.tv, you can chat with the fellow audience in real-time while watching videos. Although the video is not live-stream (which you can easily replace with your own live-streaming source) BirdTube is fully open source and ready for you to tinker with and explore.
+
+In this tutorial we'll take a look at some of the more challenging problems developers face when building video + chat application. We'll focus on how SendBird is used to interact with the client and the intricacies associated with having robust real-time chat capabilities. Whether you are a new developer looking to build your first real app, or a mobile veteran, this tutorial will help you understand how SendBird can be used in production quality apps. You can read this tutorial in any order and jump around to the sections that interest you the most. However, it is a good idea to read the first two sections first to gain a solid understanding of the architecture and the data model.
