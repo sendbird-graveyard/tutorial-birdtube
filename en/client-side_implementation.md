@@ -115,3 +115,85 @@ A signup screen will be displayed when a non-member user tries to submit a video
     }];
 }
 ```
+
+## User Login Process
+A login screen will be displayed when a non-member user tries to submit a video or when a user taps ‘Sign In’ from the ‘Settings’ screen. Email and password are required for the login.
+
+```objectivec
+// SignInViewController.m
+
+- (IBAction)signIn:(id)sender {
+    NSString *email = [self.emailTextField text];
+    NSString *password = [self.passwordTextField text];
+    if ([email length] == 0 || [password length] == 0) {
+        return;
+    }
+    NSString *deviceToken = @"";
+    [Server loginWithEmail:email password:password deviceToken:deviceToken resultBlock:^(NSDictionary *response, NSError *error) {
+        if (error) {
+            UIAlertController *alert = [UIAlertController
+                                        alertControllerWithTitle:@"Error"
+                                        message:[error domain]
+                                        preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* closeButton = [UIAlertAction
+                                          actionWithTitle:@"Close"
+                                          style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction * action) {
+                                              
+                                          }];
+            
+            [alert addAction:closeButton];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else {
+            if ([[response objectForKey:@"result"] isEqualToString:@"error"]) {
+                UIAlertController *alert = [UIAlertController
+                                            alertControllerWithTitle:@"Error"
+                                            message:[response objectForKey:@"message"]
+                                            preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* closeButton = [UIAlertAction
+                                              actionWithTitle:@"Close"
+                                              style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action) {
+                                                  
+                                              }];
+                
+                [alert addAction:closeButton];
+                
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            else {
+                NSDictionary *userDict = [response objectForKey:@"user"];
+                NSString *email = [userDict objectForKey:@"email"];
+                NSString *nickname = [userDict objectForKey:@"nickname"];
+                NSString *session = [userDict objectForKey:@"session"];
+                NSString *sendbird_id = [userDict objectForKey:@"sendbird_id"];
+                [MyUtils setUserID:email];
+                [MyUtils setUserName:nickname];
+                [MyUtils setSession:session];
+                [MyUtils setSendBirdID:sendbird_id];
+                UIAlertController *alert = [UIAlertController
+                                            alertControllerWithTitle:@"Welcome back"
+                                            message:@"Thank you for signing in."
+                                            preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* closeButton = [UIAlertAction
+                                              actionWithTitle:@"Close"
+                                              style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action) {
+                                                  [self dismissViewControllerAnimated:YES completion:^{
+                                                      [self.delegate refreshSignInStatus];
+                                                  }];
+                                              }];
+                
+                [alert addAction:closeButton];
+                
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        }
+    }];
+}
+```
