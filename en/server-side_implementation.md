@@ -197,3 +197,8 @@ Each field are defined and used as the following:
 * viewer
 
  The number of times the video was viewed on BirdTube app
+
+## Submitting YouTube Video
+Since BirdTube is relying on users’ submissions, we need to implement a request handler to process videos submitted. A user needs to login first to submit, and that user will receive Session from the server. The client will send this value along with the submission request. The data required for the submission gets transferred in JSON format through the body of POST request. The server will then create a public chat channel using SendBird’s server API, and store the channel URL of the chat room within YouTube model.
+
+You will need an API Token to use SendBird’s server API. If you haven’t already, head over to [the dashboard](https://dashboard.sendbird.com) to retrieve API Token for your app.
