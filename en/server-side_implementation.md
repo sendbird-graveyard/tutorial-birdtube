@@ -45,3 +45,7 @@ This is used for logging in. All users must have unique email addresses.
 * device_token, device_push
 
  Data used for push notifications. In this example, we won’t be building a push notification feature.
+
+## User Signup Process
+Let’s implement the request handler for the user signup process. Here, we’ll be accepting user data using JSON format through the body within POST request.
+
