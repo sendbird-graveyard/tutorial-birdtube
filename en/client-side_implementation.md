@@ -26,7 +26,8 @@ You will need the following frameworks to implement the client-side of BirdTube.
  
  Framework used to load images on UIImageView from a URL
  
-User Signup Process
+## User Signup Process
+
 A signup screen will be displayed when a non-member user tries to submit a video or when a user taps ‘Sign Up’ from the ‘Settings’ screen. Email and password are required for the signup.
 
 ```objectivec
