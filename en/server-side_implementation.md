@@ -324,7 +324,9 @@ class VideoListLoading(webapp2.RequestHandler):
 ```
 
 ## Viewing the Video and Chatting
+
 When a user starts to watch the video, a chat room will be displayed at the same time. Viewing the video will increase the viewers count. We will be using the number of views to rank videos by popularity and display them on the “Popular” tab. The video ID will be received in JSON format through the body of the POST request.
+
 ### API
 ```
 POST /video/view
