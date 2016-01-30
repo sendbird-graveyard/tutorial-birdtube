@@ -21,3 +21,27 @@ class User(ndb.Model):
   device_type = ndb.StringProperty(required=True, choices=set(["IOS", "ANDROID", "WEB"]))
 ```
 
+Each field are defined and used as the following:
+* email
+
+This is used for logging in. All users must have unique email addresses.
+
+* password
+
+Password is used for login. In this example, we’ll use a simple SHA256 hash to store encrypted passwords.
+
+* nickname
+
+Nickname is the display name used during chat. The initial value will be set to the local part of the email address. Users can change their nickname later.
+
+* session
+
+Session key used between the client and the server.
+
+* sendbird_id
+
+This is the key used to uniquely identify users during chat. A unique value needs to be assigned to the users. In this example, we’ll simply use the email addresses, but in production, it is recommended to use a different value.
+
+* device_token, device_push
+
+Data used for push notifications. In this example, we won’t be building a push notification feature.
