@@ -20,3 +20,4 @@ class User(ndb.Model):
   device_token = ndb.StringProperty(required=True, indexed=True)
   device_type = ndb.StringProperty(required=True, choices=set(["IOS", "ANDROID", "WEB"]))
 ```
+
