@@ -198,3 +198,53 @@ A login screen will be displayed when a non-member user tries to submit a video 
     }];
 }
 ```
+
+## Submitting YouTube Video
+
+We need to retrieve video ID, title, and thumbnail URL from the parsed HTML that’s submitted through the submitted URL. We’ll be using hpple Framework for the job.
+
+```objectivec
+// Server.m
+
++ (void) getYouTubeInfoUrl:(NSString *)url resultBlock:(void (^)(NSDictionary *response, NSError *error))onResult
+{
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setHTTPMethod:@"GET"];
+    [request setValue:@"SendBird Messenger/0.9.0" forHTTPHeaderField:@"User-Agent"];
+    [request setURL:[NSURL URLWithString:url]];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        NSString *videoId = @"";
+        NSString *thumbnailUrl = @"";
+        NSString *name = @"";
+        NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+        
+        NSError *error = nil;
+        if (connectionError) {
+            error = connectionError;
+            [result setObject:@"error" forKey:@"result"];
+            [result setObject:@"message" forKey:@"Connection error."];
+        }
+        else {
+            TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
+            TFHppleElement *videoIdelements = [doc peekAtSearchWithXPathQuery:@"//meta[@itemprop='videoId']"];
+            TFHppleElement *thumbnailUrlElements = [doc peekAtSearchWithXPathQuery:@"//link[@itemprop='thumbnailUrl']"];
+            TFHppleElement *nameIdelements = [doc peekAtSearchWithXPathQuery:@"//meta[@itemprop='name']"];
+            videoId = [videoIdelements objectForKey:@"content"];
+            thumbnailUrl = [thumbnailUrlElements objectForKey:@"href"];
+            name = [nameIdelements objectForKey:@"content"];
+            
+            [result setObject:@"success" forKey:@"result"];
+            [result setObject:videoId forKey:@"videoId"];
+            [result setObject:thumbnailUrl forKey:@"thumbnailUrl"];
+            [result setObject:name forKey:@"name"];
+        }
+
+        NSBlockOperation *op = [[NSBlockOperation alloc] init];
+        [op addExecutionBlock:^{
+            onResult(result, error);
+        }];
+        [[NSOperationQueue mainQueue] addOperation:op];
+    }];
+}
+```
