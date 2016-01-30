@@ -392,3 +392,11 @@ When ```ViewPlayerViewController``` is called, ```viewDidLoad``` will use iOS Yo
 You will need to send your public chat channel’s URL for the relevant YouTube video to [[SendBird joinChannel:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/joinChannel:) as a parameter.
 
 Then set a Callback block to handle the event after connecting to SendBird servers. The necessary Callback blocks from [[SendBird setEventHandlerConnectBlock:...]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/setEventHandlerConnectBlock:errorBlock:channelLeftBlock:messageReceivedBlock:systemMessageReceivedBlock:broadcastMessageReceivedBlock:fileReceivedBlock:messagingStartedBlock:messagingUpdatedBlock:messagingEndedBlock:allMessagingEndedBlock:messagingHiddenBlock:allMessagingHiddenBlock:readReceivedBlock:typeStartReceivedBlock:typeEndReceivedBlock:allDataReceivedBlock:messageDeliveryBlock:) for implementing a public chatroom are as the following:
+
+* ```setEventHandlerConnectBlock^(SendBirdChannel channel) {}```
+ 
+ This will be called when the connection with SendBird server has been made using either [[SendBird connect]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/connect) or [[SendBird connectWithMessageTs:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/connectWithMessageTs:)
+
+* ```messageReceivedBlock:^(SendBirdMessage  message) {}```
+ 
+ This will be called when a message has been received. The client will display the message on the chat UI.
