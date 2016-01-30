@@ -281,3 +281,44 @@ class RegisterVideo(webapp2.RequestHandler):
         }))
 ```
 
+Browsing the List of Submitted Videos
+The users will want to see the list of submitted videos and chat rooms. We will allow users who have not yet signed up browse the videos to get them engaged first. Because of this, we won’t be checking the session here. Since there can be a lot of videos, we’ll implement a simple pagination using number of videos to show per page, current page offset, and sorting condition. These information will be received using JSON format through the body of the POST request.
+
+### API
+```
+POST /video/list
+```
+
+### JSON
+```json
+{
+  "offset": LIST_OFFSET,
+  "limit": NUMBER_OF_VIDEOS_PER_PAGE,
+  "order_by": 1(popular) or 2(new)
+}
+```
+
+### Request Handler
+```python
+class VideoListLoading(webapp2.RequestHandler):
+  def post(self):
+    data = json.loads(self.request.body)
+    offset = data['offset']
+    limit = data['limit']
+    order_by = data['order_by']
+
+    video_list = []
+    if order_by == 1:
+      video_list = YouTube.query().order(-YouTube.viewer).fetch(limit, offset=offset)
+    else:
+      video_list = YouTube.query().order(-YouTube.created_time).fetch(limit, offset=offset)
+
+    video_dict_list = []
+    for video in video_list:
+      video_dict_list.append(video.to_dict())
+
+    self.response.write(json.dumps({
+        "result": "success",
+        "video_list": video_dict_list
+        }))
+```
