@@ -62,3 +62,44 @@ Let’s implement the request handler for the user signup process. Here, we’ll
   “device_type”: “IOS”, “ANDROID” or “WEB”
 }
 ```
+
+### Request Handler
+```python
+# main.py
+
+class UserSignUp(webapp2.RequestHandler):
+  def post(self):
+    data = json.loads(self.request.body)
+    check = User.query(User.email == data['email']).fetch(1)
+    if len(check) > 0:
+      logging.info("The email exists.")
+      self.response.write(json.dumps({
+          "result": "error",
+          "message": "The email exists."
+          }))
+      return
+
+    user = User()
+    try:
+      user.email = data['email']
+      user.nickname = data['nickname']
+      user.device_token = data['device_token']
+      user.device_type = data['device_type']
+      user.session = uuid.uuid4().hex
+      user.sendbird_id = uuid.uuid4().hex
+      user.password = User.password_encrypt(data['password'])
+      user.put()
+    except:
+      logging.info("You cannot sign up.")
+      self.response.write(json.dumps({
+          "result": "error",
+          "message": "You cannot sign up."
+          }))
+      return
+
+    user_dict = user.to_dict()
+    self.response.write(json.dumps({
+        "result": "success",
+        "user": user_dict
+        }))
+```
