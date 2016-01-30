@@ -281,7 +281,7 @@ class RegisterVideo(webapp2.RequestHandler):
         }))
 ```
 
-Browsing the List of Submitted Videos
+## Browsing the List of Submitted Videos
 The users will want to see the list of submitted videos and chat rooms. We will allow users who have not yet signed up browse the videos to get them engaged first. Because of this, we won’t be checking the session here. Since there can be a lot of videos, we’ll implement a simple pagination using number of videos to show per page, current page offset, and sorting condition. These information will be received using JSON format through the body of the POST request.
 
 ### API
