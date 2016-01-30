@@ -524,3 +524,19 @@ You can use SendBird to process not only the on-going real-time messages, but al
 }
 ```
 
+When a user types something in and tap the Send button, the message will be sent using the following:
+
+```objectivec
+// VideoPlayerViewController.m
+
+- (void) sendMessage
+{
+    NSString *message = [self.messageTextField text];
+    if ([message length] > 0) {
+        [self.messageTextField setText:@""];
+        [SendBird sendMessage:message];
+    }
+    scrollLocked = NO;
+}
+```
+
