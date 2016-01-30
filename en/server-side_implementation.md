@@ -157,3 +157,18 @@ class UserSignIn(webapp2.RequestHandler):
       return
 ```
 
+## YouTube Video Model
+The YouTube model is used to submit and manage videos. The class has the following properties:
+
+```python
+class YouTube(ndb.Model):
+  url = ndb.StringProperty(required=True)
+  video_id = ndb.StringProperty(required=True)
+  title = ndb.StringProperty(required=True)
+  thumbnail = ndb.StringProperty(required=True)
+  owner = ndb.IntegerProperty(required=True, indexed=True)
+  created_time = ndb.DateTimeProperty(auto_now_add=True, indexed=True)
+  updated_time = ndb.DateTimeProperty(auto_now=True)
+  channel_url = ndb.StringProperty(required=True)
+  viewer = ndb.IntegerProperty(default=0)
+```
