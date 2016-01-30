@@ -207,3 +207,77 @@ You will need an API Token to use SendBird’s server API. If you haven’t alre
 
 [Refer to the server API docs](https://sendbird.gitbooks.io/sendbird-server-api/content/en/channel.html) to learn more about creating open chat channels.
 
+### API
+```
+POST /video/register
+```
+
+### JSON
+```json
+{
+  "session": "USER_SESSION",
+  "video_id": "YOUTUBE_VIDEO_ID",
+  "url": "YOUTUBE_VIDEO_URL",
+  "title": "YOUTUBE_VIDEO_TITLE",
+  "thumbnail": "YOUTUBE_VIDEO_THUMBNAIL_URL",
+}
+```
+
+### Request Handler
+```python
+class RegisterVideo(webapp2.RequestHandler):
+  def post(self):
+    data = json.loads(self.request.body)
+    youtube = YouTube()
+    session = data['session']
+    user_list = User.query(User.session == session).fetch(1)
+    if len(user_list) > 0:
+      owner = user_list[0]
+
+    try:
+      youtube_list = YouTube.query(YouTube.video_id == data['video_id']).fetch(1)
+      if len(youtube_list) > 0:
+        self.response.write(json.dumps({
+            "result": "error",
+            "message": "The video is already registered."
+            }))
+        logging.info("The video is already registered.")
+        return
+
+      youtube.url = data['url']
+      youtube.video_id = data['video_id']
+      youtube.title = data['title']
+      youtube.owner = owner.key.id()
+      youtube.thumbnail = data['thumbnail']
+
+      create_channel_api = "https://api.sendbird.com/channel/create"
+      api_token = "<YOUR_APP_API_TOKEN>"
+      request_body = {
+          'auth': api_token,
+          'channel_url': uuid.uuid4().hex,
+          'name': data['title'],
+          'cover_url': data['thumbnail'],
+          'data': ""
+          }
+      data = json.dumps(request_body)
+      req = urllib2.Request(create_channel_api, data, {'Content-Type': 'application/json'})
+      f = urllib2.urlopen(req)
+      response = f.read()
+      logging.info(response)
+      channel = json.loads(response)
+      channel_url = channel['channel_url']
+      youtube.channel_url = channel_url
+      youtube.put()
+    except:
+      logging.info("error")
+      self.response.write(json.dumps({
+          "result": "error",
+          "message": "The video can't be registered."
+          }))
+      return
+    logging.info("success")
+    self.response.write(json.dumps({
+        "result": "success",
+        }))
+```
+
