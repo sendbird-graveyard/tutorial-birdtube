@@ -19,3 +19,5 @@ You will need a client and a server to make this work. The following features wi
 * Extracting meta-data from the submitted YouTube videos (e.g. title, video ID, thumbnail, etc.)
 * Chat UI
 * List of submitted videos
+
+
