@@ -382,3 +382,5 @@ When ```ViewPlayerViewController``` is called, ```viewDidLoad``` will use iOS Yo
     [self.playerView loadWithVideoId:self.video.videoID playerVars:playerVars];
 }
 ```
+
+```startChattingWithPreviousMessage:``` is used for initializing the chat. You will need to send your app’s APP ID as a parameter for [[SendBird initAppId:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/initAppId:). You can find your APP ID on the dashboard by selecting the app in development from your application list. 
