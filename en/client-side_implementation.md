@@ -252,3 +252,47 @@ We need to retrieve video ID, title, and thumbnail URL from the parsed HTML that
 ![](../file/009_screenshot_320.png)
 ![](../file/010_screenshot_320.png)
 
+## Browsing the List of Submitted Videos
+
+You can browse the list of videos that users have submitted. We won’t be needing a login for browsing to make it more accessible. We’ll be implementing a simple pagination to handle a long list of videos. The cards will display the thumbnail of the video, along with the title and the nickname of the user who’ve submitted the video.
+
+We will sort the video list in two ways for this example. Popular tab will list the videos in the order of number of views and New tab will list them in the order of submission.
+
+```
+// PopularVideoViewController.m
+
+- (void)loadNextVideoList {
+    if (hasNext == NO) {
+        return;
+    }
+    if (offset == 0) {
+        [videoArray removeAllObjects];
+    }
+    [Server queryVideoListOffset:offset limit:20 orderBy:1 resultBlock:^(NSDictionary *response, NSError *error) {
+        if (error) {
+            
+        }
+        else {
+            if ([[response objectForKey:@"result"] isEqualToString:@"error"]) {
+                
+            }
+            else {
+                NSMutableArray<Video *> *tmpVideoArray = [[NSMutableArray alloc] init];
+                for (NSDictionary *item in [response objectForKey:@"video_list"]) {
+                    Video *video = [[Video alloc] initWithDic:item];
+                    [tmpVideoArray addObject:video];
+                    offset++;
+                }
+                
+                if ([tmpVideoArray count] == 0) {
+                    hasNext = NO;
+                }
+                else {
+                    [videoArray addObjectsFromArray:tmpVideoArray];
+                }
+                [self.tableView reloadData];
+            }
+        }
+    }];
+}
+```
