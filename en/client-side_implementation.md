@@ -302,7 +302,9 @@ We will sort the video list in two ways for this example. Popular tab will list 
 Viewing the Video and Chatting
 If a user taps on a video from the list (Popular or New), YouTube video will start to play and the user will be able to chat with others watching the video. Users who are not logged in cannot participate in the chat and can only view the video.
 
-ViewPlayerViewController will be called when a video has been selected for viewing:
+```ViewPlayerViewController``` will be called when a video has been selected for viewing:
+
+```objectivec
 // PopularVideoViewController.m
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -316,6 +318,7 @@ ViewPlayerViewController will be called when a video has been selected for viewi
     [self.tableView deselectRowAtIndexPath:path animated:NO];
     [self presentViewController:vc animated:NO completion:nil];
 }
+```
 
 When ```ViewPlayerViewController``` is called, ```viewDidLoad``` will use iOS YouTube Helper to load the video:
 
