@@ -203,3 +203,4 @@ Since BirdTube is relying on users’ submissions, we need to implement a reques
 
 You will need an API Token to use SendBird’s server API. If you haven’t already, head over to [the dashboard](https://dashboard.sendbird.com) to retrieve API Token for your app.
 
+![API Token on Dashboard](../file/API_Token.png)
