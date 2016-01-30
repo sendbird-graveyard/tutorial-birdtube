@@ -249,6 +249,6 @@ We need to retrieve video ID, title, and thumbnail URL from the parsed HTML that
 }
 ```
 
-![](../file/009_screenshot.png =320x)
-![](../file/010_screenshot.png =320x)
+![](../file/009_screenshot.png)
+![](../file/010_screenshot.png)
 
