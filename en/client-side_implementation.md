@@ -117,6 +117,7 @@ A signup screen will be displayed when a non-member user tries to submit a video
 ```
 
 ## User Login Process
+
 A login screen will be displayed when a non-member user tries to submit a video or when a user taps ‘Sign In’ from the ‘Settings’ screen. Email and password are required for the login.
 
 ```objectivec
