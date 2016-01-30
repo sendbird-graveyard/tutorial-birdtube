@@ -322,3 +322,32 @@ class VideoListLoading(webapp2.RequestHandler):
         "video_list": video_dict_list
         }))
 ```
+
+Viewing the Video and Chatting
+When a user starts to watch the video, a chat room will be displayed at the same time. Viewing the video will increase the viewers count. We will be using the number of views to rank videos by popularity and display them on the “Popular” tab. The video ID will be received in JSON format through the body of the POST request.
+### API
+```
+POST /video/view
+```
+
+### JSON
+```json
+{
+  “video_id”: “YOUTUBE_VIDEO_ID”
+}
+```
+
+### Request Handler
+```python
+class ViewVideo(webapp2.RequestHandler):
+  def post(self):
+    data = json.loads(self.request.body)
+    video_id = data['video_id']
+    video_list = YouTube.query(YouTube.video_id == video_id).fetch(1)
+    if len(video_list) > 0:
+      video = video_list[0]
+      video.viewer = video.viewer + 1
+      video.put()
+
+    self.response.write("{}")
+```
