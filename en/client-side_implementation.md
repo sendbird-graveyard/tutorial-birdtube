@@ -403,3 +403,124 @@ Then set a Callback block to handle the event after connecting to SendBird serve
 
 You can use SendBird to process not only the on-going real-time messages, but also to retrieve previous messages as well. After setting the callback block, you can use [[[SendBird queryMessageListInChannel:[self.video channelUrl]] prevWithMessageTs:LLONG_MAX andLimit:50 resultBlock:^(NSMutableArray *queryResult) {} endBlock:^(NSError *error) {}];](http://docs.sendbird.com/ref/ios/en/Classes/SendBirdMessageListQuery.html#//api/name/prevWithMessageTs:andLimit:resultBlock:endBlock:) to get those messages. After displaying the previous messages, you can call [[SendBird connect]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/connect) or [[SendBird connectWithMessageTs:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/connectWithMessageTs:) to start receiving real-time chat messages.
 
+```objectivec
+// VideoPlayerViewController.m
+
+- (void)startChattingWithPreviousMessage:(BOOL)tf
+{
+    [SendBird initAppId:@"<YOUR_APP_ID>"];
+    [SendBird loginWithUserId:[MyUtils getUserID] andUserName:[MyUtils getUserName] andUserImageUrl:[MyUtils getUserProfileImage] andAccessToken:@""];
+    [SendBird joinChannel:[self.video channelUrl]];
+    [SendBird setEventHandlerConnectBlock:^(SendBirdChannel *channel) {
+        currentChannel = channel;
+    } errorBlock:^(NSInteger code) {
+        
+    } channelLeftBlock:^(SendBirdChannel *channel) {
+        
+    } messageReceivedBlock:^(SendBirdMessage *message) {
+        if (lastMessageTimestamp < [message getMessageTimestamp]) {
+            lastMessageTimestamp = [message getMessageTimestamp];
+        }
+        
+        if (firstMessageTimestamp > [message getMessageTimestamp]) {
+            firstMessageTimestamp = [message getMessageTimestamp];
+        }
+        
+        if ([message isPast]) {
+            [messages insertObject:message atIndex:0];
+        }
+        else {
+            [messages addObject:message];
+        }
+        [self scrollToBottomWithReloading:YES animated:NO forced:NO];
+    } systemMessageReceivedBlock:^(SendBirdSystemMessage *message) {
+        
+    } broadcastMessageReceivedBlock:^(SendBirdBroadcastMessage *message) {
+        if (lastMessageTimestamp < [message getMessageTimestamp]) {
+            lastMessageTimestamp = [message getMessageTimestamp];
+        }
+        
+        if (firstMessageTimestamp > [message getMessageTimestamp]) {
+            firstMessageTimestamp = [message getMessageTimestamp];
+        }
+        
+        if ([message isPast]) {
+            [messages insertObject:message atIndex:0];
+        }
+        else {
+            [messages addObject:message];
+        }
+        [self scrollToBottomWithReloading:YES animated:NO forced:NO];
+    } fileReceivedBlock:^(SendBirdFileLink *fileLink) {
+        if (lastMessageTimestamp < [fileLink getMessageTimestamp]) {
+            lastMessageTimestamp = [fileLink getMessageTimestamp];
+        }
+        
+        if (firstMessageTimestamp > [fileLink getMessageTimestamp]) {
+            firstMessageTimestamp = [fileLink getMessageTimestamp];
+        }
+        
+        if ([fileLink isPast]) {
+            [messages insertObject:fileLink atIndex:0];
+        }
+        else {
+            [messages addObject:fileLink];
+        }
+        [self scrollToBottomWithReloading:YES animated:NO forced:NO];
+    } messagingStartedBlock:^(SendBirdMessagingChannel *channel) {
+
+    } messagingUpdatedBlock:^(SendBirdMessagingChannel *channel) {
+        
+    } messagingEndedBlock:^(SendBirdMessagingChannel *channel) {
+        
+    } allMessagingEndedBlock:^{
+        
+    } messagingHiddenBlock:^(SendBirdMessagingChannel *channel) {
+        
+    } allMessagingHiddenBlock:^{
+        
+    } readReceivedBlock:^(SendBirdReadStatus *status) {
+        
+    } typeStartReceivedBlock:^(SendBirdTypeStatus *status) {
+        
+    } typeEndReceivedBlock:^(SendBirdTypeStatus *status) {
+        
+    } allDataReceivedBlock:^(NSUInteger sendBirdDataType, int count) {
+        
+    } messageDeliveryBlock:^(BOOL send, NSString *message, NSString *data, NSString *messageId) {
+        
+    }];
+    
+    if (tf) {
+        NSLog(@"Channel: %@", [self.video channelUrl]);
+        [[SendBird queryMessageListInChannel:[self.video channelUrl]] prevWithMessageTs:LLONG_MAX andLimit:50 resultBlock:^(NSMutableArray *queryResult) {
+            for (SendBirdMessage *message in queryResult) {
+                if ([message isPast]) {
+                    [messages insertObject:message atIndex:0];
+                }
+                else {
+                    [messages addObject:message];
+                }
+                
+                if (lastMessageTimestamp < [message getMessageTimestamp]) {
+                    lastMessageTimestamp = [message getMessageTimestamp];
+                }
+                
+                if (firstMessageTimestamp > [message getMessageTimestamp]) {
+                    firstMessageTimestamp = [message getMessageTimestamp];
+                }
+                
+            }
+            [self scrollToBottomWithReloading:YES animated:NO forced:NO];
+            scrollLocked = NO;
+            [SendBird connectWithMessageTs:LLONG_MAX];
+        } endBlock:^(NSError *error) {
+            
+        }];
+    }
+    else {
+        [SendBird connect];
+    }
+}
+```
+
