@@ -249,8 +249,8 @@ We need to retrieve video ID, title, and thumbnail URL from the parsed HTML that
 }
 ```
 
-![](../file/009_screenshot_320.png)
-![](../file/010_screenshot_320.png)
+![](img/009_screenshot_320.png)
+![](img/010_screenshot_320.png)
 
 ## Browsing the List of Submitted Videos
 
@@ -297,7 +297,7 @@ We will sort the video list in two ways for this example. Popular tab will list 
 }
 ```
 
-![](../file/008_screenshot_320.png)
+![](img/008_screenshot_320.png)
 
 ## Viewing the Video and Chatting
 If a user taps on a video from the list (Popular or New), YouTube video will start to play and the user will be able to chat with others watching the video. Users who are not logged in cannot participate in the chat and can only view the video.
@@ -385,7 +385,7 @@ When ```ViewPlayerViewController``` is called, ```viewDidLoad``` will use iOS Yo
 
 ```startChattingWithPreviousMessage:``` is used for initializing the chat. You will need to send your app’s APP ID as a parameter for [[SendBird initAppId:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/initAppId:). You can find your APP ID on [the dashboard](https://dashboard.sendbird.com) by selecting the app in development from your application list.
 
-![](../file/APP_ID.png)
+![](img/APP_ID.png)
 
 [[SendBird loginWithUserID:andUserName:andUserImageUrl:andAccessToken:]](http://docs.sendbird.com/ref/ios/en/Classes/SendBird.html#//api/name/loginWithUserId:andUserName:andUserImageUrl:andAccessToken:) is used to set user’s data for connecting to SendBird.
 
