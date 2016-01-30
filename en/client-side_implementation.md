@@ -298,3 +298,84 @@ We will sort the video list in two ways for this example. Popular tab will list 
 ```
 
 ![](../file/008_screenshot_320.png)
+
+Viewing the Video and Chatting
+If a user taps on a video from the list (Popular or New), YouTube video will start to play and the user will be able to chat with others watching the video. Users who are not logged in cannot participate in the chat and can only view the video.
+
+ViewPlayerViewController will be called when a video has been selected for viewing:
+// PopularVideoViewController.m
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSIndexPath *path = indexPath;
+    VideoPlayerViewController *vc = [[self storyboard] instantiateViewControllerWithIdentifier:@"VideoPlayerViewController"];
+    Video *video = [videoArray objectAtIndex:[path row]];
+    [Server viewVideo:[video videoID]];
+    [vc setVideoData:video];
+
+    [self.tableView deselectRowAtIndexPath:path animated:NO];
+    [self presentViewController:vc animated:NO completion:nil];
+}
+
+When ```ViewPlayerViewController``` is called, ```viewDidLoad``` will use iOS YouTube Helper to load the video:
+
+```objectivec
+// VideoPlayerViewController.m
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setNeedsStatusBarAppearanceUpdate];
+    // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+
+    openImagePicker = NO;
+    isLoadingMessage = NO;
+    lastMessageTimestamp = LLONG_MIN;
+    firstMessageTimestamp = LLONG_MAX;
+    scrollLocked = NO;
+    lightTheme = YES;
+    
+    messages = [[NSMutableArray alloc] init];
+    
+    [self.navigationBarTitle setTitle:[self.video title]];
+    [self.sendFileButton.layer setBorderColor:[[UIColor blueColor] CGColor]];
+    [self.sendMessageButton.layer setBorderColor:[[UIColor blueColor] CGColor]];
+    [self.messageTextField.layer setBorderColor:[[UIColor blueColor] CGColor]];
+    
+    [self.messageTextField setDelegate:self];
+    
+    [self.tableView setDelegate:self];
+    [self.tableView setDataSource:self];
+    [self.tableView setSeparatorColor:[UIColor clearColor]];
+    
+    if ([[MyUtils getUserID] length] > 0 && [[MyUtils getSession] length] > 0) {
+        [self startChattingWithPreviousMessage:YES];
+        isLoadingMessage = YES;
+    }
+    else {
+        [self.sendFileButton setEnabled:NO];
+        [self.sendMessageButton setEnabled:NO];
+        [self.messageTextField setEnabled:NO];
+    }
+
+    // For a full list of player parameters, see the documentation for the HTML5 player
+    // at: https://developers.google.com/youtube/player_parameters?playerVersion=HTML5
+    NSDictionary *playerVars = @{
+                                 @"controls" : @0,
+                                 @"playsinline" : @1,
+                                 @"autohide" : @1,
+                                 @"showinfo" : @0,
+                                 @"modestbranding" : @1,
+                                 };
+    [self.playerView setDelegate:self];
+    [self.playerView loadWithVideoId:self.video.videoID playerVars:playerVars];
+}
+```
