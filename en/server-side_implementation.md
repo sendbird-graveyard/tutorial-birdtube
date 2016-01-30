@@ -105,3 +105,55 @@ class UserSignUp(webapp2.RequestHandler):
         "user": user_dict
         }))
 ```
+
+## User Login Process
+Now, we’ll implement a request handler to process user login. We’ll be accepting JSON formatted data (email, password, device token, device type, etc.) through the body of POST request. We’ll look up a user with matching email and password, then return the user data.
+
+### API
+```
+POST /signin
+```
+
+### JSON
+```json
+{
+  “email”: “USER@EXAMPLE.COM”,
+  “password”: “USER_PASSWORD”,
+  “device_token”: “DEVICE_TOKEN”,
+  “device_type”: “IOS”, “ANDROID” or “WEB”
+}
+```
+
+### Request Handler
+```python
+# main.py
+
+class UserSignIn(webapp2.RequestHandler):
+  def post(self):
+    data = json.loads(self.request.body)
+    user_list = User.query(User.email == data['email']).fetch(1)
+    if len(user_list) > 0:
+      user = user_list[0]
+      if user.password == User.password_encrypt(data['password']):
+        user.device_token = data['device_token']
+        user.device_type = data['device_type']
+        user.put()
+        self.response.write(json.dumps({
+            "result": "success",
+            "user": user.to_dict()
+            }))
+        return
+      else:
+        self.response(json.dumps({
+            "result": "error",
+            "message": "Password is incorrect."
+            }))
+        return
+    else:
+      self.response(json.dumps({
+          "result": "error",
+          "message": "User not found."
+          }))
+      return
+```
+
