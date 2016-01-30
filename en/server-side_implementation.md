@@ -28,7 +28,7 @@ This is used for logging in. All users must have unique email addresses.
 
 * password
 
-Password is used for login. In this example, we’ll use a simple SHA256 hash to store encrypted passwords.
+** Password is used for login. In this example, we’ll use a simple SHA256 hash to store encrypted passwords.
 
 * nickname
 
