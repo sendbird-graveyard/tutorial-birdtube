@@ -50,7 +50,7 @@ This is used for logging in. All users must have unique email addresses.
 Let’s implement the request handler for the user signup process. Here, we’ll be accepting user data using JSON format through the body within POST request.
 
 ### API
-```
+```restful
 POST /signup
 ```
 
