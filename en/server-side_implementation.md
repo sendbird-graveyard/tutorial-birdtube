@@ -172,3 +172,27 @@ class YouTube(ndb.Model):
   channel_url = ndb.StringProperty(required=True)
   viewer = ndb.IntegerProperty(default=0)
 ```
+
+Each field are defined and used as the following:
+* url
+
+ The URL of YouTube videoYouTube 영상 URL
+* video_id
+
+ The unique ID of the video
+
+* title
+
+ The title of the submitted video
+
+* thumbnail
+
+ The thumbnail image of the submitted video
+
+* channel_url
+
+ The public chat channel URL assigned for the video
+
+* viewer
+
+ The number of times the video was viewed on BirdTube app
